@@ -1,0 +1,17 @@
+{
+  "cards": {
+    "ExampleCard": {
+      "name": "示例卡牌",
+      "description": "造成 {damage} 点伤害。"
+    }
+  },
+  "relics": {
+    "ExampleRelic": {
+      "name": "示例遗物",
+      "description": "每场战斗开始时，获得 1 点力量。"
+    }
+  },
+  "ui": {
+    "mod_name": "我的杀戮尖塔2 Mod"
+  }
+}

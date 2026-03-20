@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 与游戏一致: Godot 4.5 + .NET 9.0 -->
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>MyStS2Mod</AssemblyName>
+    <RootNamespace>MyStS2Mod</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+  </PropertyGroup>
+
+  <!-- 游戏 DLL 所在路径 (macOS) -->
+  <PropertyGroup>
+    <GameManagedPath>$(HOME)/Library/Application Support/Steam/steamapps/common/Slay the Spire 2/SlayTheSpire2.app/Contents/Resources/data_sts2_macos_arm64</GameManagedPath>
+  </PropertyGroup>
+
+  <!-- Harmony (游戏内置了 0Harmony 2.4.2，这里引用同版本) -->
+  <ItemGroup>
+    <PackageReference Include="Lib.Harmony" Version="2.4.2" />
+  </ItemGroup>
+
+  <!-- 游戏核心程序集引用 -->
+  <ItemGroup>
+    <!-- sts2.dll: 游戏主逻辑 (卡牌、遗物、战斗等所有游戏类) -->
+    <Reference Include="sts2">
+      <HintPath>$(GameManagedPath)/sts2.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <!-- GodotSharp.dll: Godot 引擎 C# 绑定 (Node, Resource, GD 等) -->
+    <Reference Include="GodotSharp">
+      <HintPath>$(GameManagedPath)/GodotSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- BaseLib (可选依赖，标准化内容添加 API) -->
+  <!--
+  <ItemGroup>
+    <PackageReference Include="Alchyr.Sts2.BaseLib" Version="*" />
+  </ItemGroup>
+  -->
+
+  <!-- 构建后自动复制到游戏 mods 目录 -->
+  <Target Name="CopyToMods" AfterTargets="Build">
+    <PropertyGroup>
+      <ModsDir>$(GameManagedPath)/../mods/$(AssemblyName)</ModsDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(ModsDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsDir)" />
+    <Copy SourceFiles="mod_manifest.json" DestinationFolder="$(ModsDir)" />
+    <Copy SourceFiles="friendly_fire_config.json" DestinationFolder="$(ModsDir)" />
+  </Target>
+
+</Project>

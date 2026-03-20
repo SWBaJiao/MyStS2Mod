@@ -1,0 +1,15 @@
+{
+  "// 说明": "杀戮尖塔2 友伤Mod 配置文件",
+
+  "// toggle_key": "按住此键时，允许单体攻击牌选择队友。值为 Godot Key 枚举名",
+  "toggle_key": "Alt",
+
+  "// single_target_whitelist": "允许友伤的单体攻击牌类名列表。留空 [] 表示所有单体攻击牌都可以",
+  "single_target_whitelist": [],
+
+  "// aoe_enabled": "是否启用 AOE 攻击扩展（攻击除自己以外的所有人）",
+  "aoe_enabled": true,
+
+  "// aoe_whitelist": "允许 AOE 友伤的卡牌类名列表。留空 [] 表示所有 AOE 攻击牌都可以",
+  "aoe_whitelist": []
+}
