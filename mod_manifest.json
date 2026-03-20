@@ -1,5 +1,5 @@
 {
-  "id": "com.guojiayu.friendlyfire",
+  "id": "FriendlyFire",
   "name": "Friendly Fire",
   "author": "guojiayu",
   "description": "Hold Alt to target allies with attack cards. AOE attacks hit everyone except yourself. JSON whitelist supported.",

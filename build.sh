@@ -17,7 +17,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_FILE="$SCRIPT_DIR/MyStS2Mod.csproj"
 # MOD_ID 必须和 mod_manifest.json 中的 "id" 一致
 # 游戏通过 {id}.dll 和 {id}.pck 查找文件
-MOD_ID="com.guojiayu.friendlyfire"
+MOD_ID="FriendlyFire"
 MOD_NAME="FriendlyFire"
 OUTPUT_DIR="$SCRIPT_DIR/output/$MOD_ID"
 

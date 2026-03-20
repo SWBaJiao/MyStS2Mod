@@ -8,7 +8,7 @@
         <AppOutputBase>$(MSBuildProjectDirectory)\</AppOutputBase>
         <PathMap>$(AppOutputBase)=.\</PathMap>
         <!-- 重要：AssemblyName 必须和 mod_manifest.json 中的 id 一致 -->
-        <AssemblyName>com.guojiayu.friendlyfire</AssemblyName>
+        <AssemblyName>FriendlyFire</AssemblyName>
         <RootNamespace>MyStS2Mod</RootNamespace>
         <!-- 禁用架构不匹配警告 -->
         <NoWarn>$(NoWarn);MSB3270</NoWarn>
@@ -81,15 +81,15 @@
     <!-- ==================== Godot 资源文件排除编译 ==================== -->
     <ItemGroup>
         <!-- Mod 资源目录（图片、本地化等）不参与 C# 编译 -->
-        <Compile Remove="com.guojiayu.friendlyfire/**" />
-        <EmbeddedResource Remove="com.guojiayu.friendlyfire/**" />
+        <Compile Remove="FriendlyFire/**" />
+        <EmbeddedResource Remove="FriendlyFire/**" />
     </ItemGroup>
 
     <ItemGroup>
         <None Include=".gitignore" />
         <None Include="mod_manifest.json" />
         <None Include="project.godot" />
-        <None Include="com.guojiayu.friendlyfire/**" />
+        <None Include="FriendlyFire/**" />
     </ItemGroup>
 
     <!-- ==================== 构建前检查 ==================== -->
@@ -103,17 +103,17 @@
     <Target Name="CopyToModsFolderOnBuild" AfterTargets="PostBuildEvent"
             Condition="Exists('$(ModsPath)')">
         <Message Text="Copying DLL and manifest to mods folder." Importance="high" />
-        <MakeDir Directories="$(ModsPath)com.guojiayu.friendlyfire/" />
-        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)com.guojiayu.friendlyfire/" />
-        <Copy SourceFiles="mod_manifest.json" DestinationFolder="$(ModsPath)com.guojiayu.friendlyfire/" />
-        <Copy SourceFiles="friendly_fire_config.json" DestinationFolder="$(ModsPath)com.guojiayu.friendlyfire/" />
+        <MakeDir Directories="$(ModsPath)FriendlyFire/" />
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)FriendlyFire/" />
+        <Copy SourceFiles="mod_manifest.json" DestinationFolder="$(ModsPath)FriendlyFire/" />
+        <Copy SourceFiles="friendly_fire_config.json" DestinationFolder="$(ModsPath)FriendlyFire/" />
     </Target>
 
     <!-- ==================== Publish 时导出 .pck ==================== -->
     <Target Name="GodotPublish" AfterTargets="Publish"
             Condition="'$(GodotPath)' != '' and Exists('$(GodotPath)') and '$(IsInnerGodotExport)' != 'true'">
         <Message Text="Exporting Godot .pck to mods folder" Importance="high"/>
-        <Exec Command="&quot;$(GodotPath)&quot; --headless --export-pack &quot;BasicExport&quot; &quot;$(ModsPath)com.guojiayu.friendlyfire/com.guojiayu.friendlyfire.pck&quot;"
+        <Exec Command="&quot;$(GodotPath)&quot; --headless --export-pack &quot;BasicExport&quot; &quot;$(ModsPath)FriendlyFire/FriendlyFire.pck&quot;"
               EnvironmentVariables="IsInnerGodotExport=true;MSBUILDDISABLENODEREUSE=1"
               ContinueOnError="WarnAndContinue"/>
     </Target>
