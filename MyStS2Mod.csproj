@@ -43,7 +43,8 @@
   </ItemGroup>
   -->
 
-  <!-- 构建后自动复制到游戏 mods 目录 -->
+  <!-- 构建后自动复制到游戏 mods 目录（已禁用，改用 build.sh 输出到 output/） -->
+  <!--
   <Target Name="CopyToMods" AfterTargets="Build">
     <PropertyGroup>
       <ModsDir>$(GameManagedPath)/../mods/$(AssemblyName)</ModsDir>
@@ -53,5 +54,6 @@
     <Copy SourceFiles="mod_manifest.json" DestinationFolder="$(ModsDir)" />
     <Copy SourceFiles="friendly_fire_config.json" DestinationFolder="$(ModsDir)" />
   </Target>
+  -->
 
 </Project>
