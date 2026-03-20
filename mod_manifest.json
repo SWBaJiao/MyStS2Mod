@@ -2,9 +2,9 @@
   "id": "com.guojiayu.friendlyfire",
   "name": "Friendly Fire",
   "author": "guojiayu",
-  "description": "按住 Alt 键时，攻击牌可以选择队友。AOE 攻击牌会攻击除自己以外所有人。支持 JSON 白名单配置。",
-  "version": "1.0.0",
-  "has_pck": false,
+  "description": "Hold Alt to target allies with attack cards. AOE attacks hit everyone except yourself. JSON whitelist supported.",
+  "version": "v1.0.0",
+  "has_pck": true,
   "has_dll": true,
   "dependencies": [],
   "affects_gameplay": true
