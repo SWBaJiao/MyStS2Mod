@@ -2,25 +2,27 @@
 
 > 按住 `Alt` 键，让你的攻击牌也能对队友「友好地」挥出一刀。
 
-![Slay the Spire 2](https://img.shields.io/badge/Slay%20the%20Spire%202-Mod-red?style=flat-square)
-![.NET 9.0](https://img.shields.io/badge/.NET-9.0-blue?style=flat-square)
-![Harmony 2.4.2](https://img.shields.io/badge/Harmony-2.4.2-green?style=flat-square)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
-![AI Assisted](https://img.shields.io/badge/AI%20Assisted-Claude-blueviolet?style=flat-square)
+Slay the Spire 2
+.NET 9.0
+Harmony 2.4.2
+License: MIT
+AI Assisted
 
 ---
 
 ## 功能介绍
 
-| 功能 | 说明 |
-|------|------|
-| **单体攻击友伤** | 按住 `Alt` 键时，`AnyEnemy` 类型的攻击牌可以选择队友作为目标 |
+
+| 功能           | 说明                                                            |
+| ------------ | ------------------------------------------------------------- |
+| **单体攻击友伤**   | 按住 `Alt` 键时，`AnyEnemy` 类型的攻击牌可以选择队友作为目标                       |
 | **AOE 扩展攻击** | 按住 `Alt` 键时，`AllEnemies` 类型的 AOE 牌会攻击**其他玩家的角色**（不伤自己和自己的召唤物） |
-| **特殊效果生效** | 卡牌附带的 debuff（易伤、虚弱等）对队友同样生效 |
-| **JSON 白名单** | 通过配置文件精确控制哪些卡牌允许友伤 |
-| **危险卡牌保护** | 自动拦截访问 `Monster` 属性的卡牌，防止游戏崩溃 |
-| **屏幕提示** | 按住开关键时屏幕顶部显示"友军伤害开启"红色提示 |
-| **多人同步安全** | 通过 TargetId 信号机制确保所有客户端状态一致，不会断连 |
+| **特殊效果生效**   | 卡牌附带的 debuff（易伤、虚弱等）对队友同样生效                                   |
+| **JSON 白名单** | 通过配置文件精确控制哪些卡牌允许友伤                                            |
+| **危险卡牌保护**   | 自动拦截访问 `Monster` 属性的卡牌，防止游戏崩溃                                 |
+| **屏幕提示**     | 按住开关键时屏幕顶部显示"友军伤害开启"红色提示                                      |
+| **多人同步安全**   | 通过 TargetId 信号机制确保所有客户端状态一致，不会断连                              |
+
 
 ### 工作流程
 
@@ -47,17 +49,20 @@
 > **重要：安装任何 Mod 前，请先备份你的游戏存档！**
 >
 > 存档位置：
-> - **Windows:** `%APPDATA%\..\LocalLow\MegaCrit\SlayTheSpire2\`
-> - **macOS:** `~/Library/Application Support/MegaCrit/SlayTheSpire2/`
+>
+> - **Windows:** `%APPDATA%\..\Roaming\SlayTheSpire2\`
+> - **macOS:** `~/Library/Application Support/SlayTheSpire2/`
 >
 > 将整个文件夹复制一份到安全的地方即可。如果 Mod 出现问题，可以随时恢复。
 
 ### 第一步：找到游戏根目录
 
-| 平台 | 游戏根目录路径 |
-|------|---------------|
-| **Windows** | `C:\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2\` |
-| **macOS** | `~/Library/Application Support/Steam/steamapps/common/Slay the Spire 2/SlayTheSpire2.app/Contents/Resources/` |
+
+| 平台          | 游戏根目录路径                                                                                                       |
+| ----------- | ------------------------------------------------------------------------------------------------------------- |
+| **Windows** | `C:\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2\`                                             |
+| **macOS**   | `~/Library/Application Support/Steam/steamapps/common/Slay the Spire 2/SlayTheSpire2.app/Contents/Resources/` |
+
 
 > **提示：** 在 Steam 中右键游戏 → 管理 → 浏览本地文件，可以快速打开游戏根目录。
 
@@ -115,11 +120,13 @@ mods/
 
 ### 使用方式
 
-| 操作 | 效果 |
-|------|------|
-| **不按 Alt** 打出攻击牌 | 正常行为，和原版完全一样 |
-| **按住 Alt** 打出单体攻击牌 | 可以选择队友作为目标，屏幕顶部出现红色提示 |
+
+| 操作                    | 效果                                |
+| --------------------- | --------------------------------- |
+| **不按 Alt** 打出攻击牌      | 正常行为，和原版完全一样                      |
+| **按住 Alt** 打出单体攻击牌    | 可以选择队友作为目标，屏幕顶部出现红色提示             |
 | **按住 Alt** 打出 AOE 攻击牌 | AOE 命中所有敌人 + 其他玩家的角色（不伤自己和自己的召唤物） |
+
 
 > **多人游戏注意：** 所有玩家都需要安装**相同版本**的 Mod，且 `friendly_fire_config.cfg` 中的白名单配置**必须一致**，否则可能导致状态不同步断连。建议由房主统一分发配置文件。
 
@@ -131,6 +138,7 @@ mods/
 ### 从源码编译（开发者）
 
 **前置要求：**
+
 - [.NET SDK 9.0+](https://dotnet.microsoft.com/download)（macOS: `brew install dotnet`）
 - [Godot 4.5.1 Mono](https://godotengine.org/download)（可选，导出 .pck 需要）
 - 杀戮尖塔 2 已安装（需要引用游戏 DLL）
@@ -149,12 +157,14 @@ chmod +x build.sh
 
 **编译脚本命令：**
 
-| 命令 | 说明 |
-|------|------|
-| `./build.sh` | 编译 Release 版本，输出到 `output/FriendlyFire/` |
-| `./build.sh debug` | 编译 Debug 版本 |
-| `./build.sh publish` | 编译 + 导出 .pck（需要 Godot 4.5.1 Mono） |
-| `./build.sh clean` | 清理所有编译产物 |
+
+| 命令                   | 说明                                       |
+| -------------------- | ---------------------------------------- |
+| `./build.sh`         | 编译 Release 版本，输出到 `output/FriendlyFire/` |
+| `./build.sh debug`   | 编译 Debug 版本                              |
+| `./build.sh publish` | 编译 + 导出 .pck（需要 Godot 4.5.1 Mono）        |
+| `./build.sh clean`   | 清理所有编译产物                                 |
+
 
 ---
 
@@ -191,21 +201,25 @@ chmod +x build.sh
 ### 白名单配置示例
 
 **示例 1** — 只允许 `猛击` 和 `上勾拳` 友伤：
+
 ```json
 "single_target_whitelist": ["Bash", "Uppercut"]
 ```
 
 **示例 2** — 所有单体攻击牌都允许（默认）：
+
 ```json
 "single_target_whitelist": []
 ```
 
 **示例 3** — 只允许 `雷鸣` 和 `旋风` AOE 友伤：
+
 ```json
 "aoe_whitelist": ["Thunderclap", "Whirlwind"]
 ```
 
 **示例 4** — 完全关闭 AOE 友伤：
+
 ```json
 "aoe_enabled": false
 ```
@@ -225,123 +239,125 @@ chmod +x build.sh
 
 ### 单体攻击牌（164 张）
 
-<details>
-<summary>点击展开完整名单</summary>
+点击展开完整名单
 
-| 类名 | 中文名 | 类名 | 中文名 |
-|------|--------|------|--------|
-| AdaptiveStrike | 自适应打击 | AllForOne | 万箭齐发 |
-| Anger | 怒火 | AshenStrike | 灰烬打击 |
-| Assassinate | 暗杀 | Backstab | 背刺 |
-| BallLightning | 球状闪电 | Barrage | 弹幕 |
-| Bash | 猛击 | BeamCell | 光束单元 |
-| BeatDown | 痛殴 | BeatIntoShape | 锤炼成型 |
-| Begone | 退散 | BlightStrike | 枯萎打击 |
-| Bludgeon | 重击 | BodySlam | 碾压 |
-| Bolas | 流星锤 | Bombardment | 轰炸 |
-| Break | 破碎 | Bully | 欺凌 |
-| Bury | 埋葬 | ByrdSwoop | 鸟类俯冲 |
-| CelestialMight | 天界之力 | Cinder | 余烬 |
-| Clash | 冲突 | Claw | 利爪 |
-| ColdSnap | 寒流 | CollisionCourse | 碰撞航线 |
-| Comet | 彗星 | CompileDriver | 编译驱动 |
-| CrescentSpear | 新月之矛 | DaggerThrow | 飞刀投掷 |
-| Dash | 冲刺 | DeathMarch | 死亡进军 |
-| Debilitate | 衰弱 | Defile | 亵渎 |
-| Devastate | 毁灭 | Dismantle | 拆解 |
-| DrainPower | 汲取能量 | Eradicate | 根除 |
-| FallingStar | 坠星 | Fear | 恐惧 |
-| Feed | 吞噬 | Fetch | 取回 |
-| FiendFire | 魔焰 | FightMe | 来战 |
-| Finisher | 终结 | Fisticuffs | 拳击 |
-| FlashOfSteel | 钢铁闪光 | Flatten | 压扁 |
-| Flechettes | 飞镖 | FocusedStrike | 专注打击 |
-| Ftl | 超光速 | GammaBlast | 伽马射线 |
-| GangUp | 围攻 | GiantRock | 巨岩 |
-| GoForTheEyes | 直捣黄龙 [已修复] | GoldAxe | 黄金斧 |
-| Grapple | 擒拿 | Graveblast | 墓穴爆破 |
-| GuidingStar | 引导之星 | GunkUp | 粘液 |
-| HandOfGreed | 贪婪之手 | Hang | 绞刑 |
-| Headbutt | 头槌 | HeavenlyDrill | 天钻 |
-| Hegemony | 霸权 | HeirloomHammer | 传家之锤 |
-| HelixDrill | 螺旋钻 | Hemokinesis | 血液操控 |
-| IceLance | 冰矛 | IronWave | 铁浪 |
-| Jackpot | 头奖 | KinglyKick | 帝王踢 |
-| KinglyPunch | 帝王拳 | Knockdown | 击倒 |
-| KnockoutBlow | 致命一击 | LeadingStrike | 引领打击 |
-| LunarBlast | 月光冲击 | MadScience | 疯狂科学 |
-| MakeItSo | 就这么办 | Mangle | 撕裂 |
-| Maul | 重锤 | MementoMori | 死亡勿忘 |
-| MeteorStrike | 流星打击 | MindBlast | 精神冲击 |
-| MinionDiveBomb | 仆从俯冲 | MinionStrike | 仆从打击 |
-| Misery | 苦难 | MoltenFist | 熔岩之拳 |
-| MomentumStrike | 动量打击 | Murder | 谋杀 |
-| NeowsFury | 尼奥之怒 | Neutralize | 中和 |
-| Null | 归零 | Omnislice | 全方位斩 |
-| Peck | 啄击 | PerfectedStrike | 完美打击 |
-| PhotonCut | 光子斩 | Pillage | 掠夺 |
-| Pinpoint | 精准 | PoisonedStab | 毒刺 |
-| Poke | 戳击 | PommelStrike | 刀柄打击 |
-| Pounce | 猛扑 | PreciseCut | 精确切割 |
-| Predator | 捕食者 | Protector | 保护者 |
-| PullFromBelow | 冥界之握 | Rampage | 暴走 |
-| Rattle | 嘎嘎作响 | Reap | 收割 |
-| Reave | 劫掠 | Rebound | 反弹 |
-| Refract | 折射 | Rend | 撕扯 |
-| RightHandHand | 右手之手 | RocketPunch | 火箭拳 |
-| Salvo | 齐射 | Scrape | 刮削 |
-| SculptingStrike | 雕塑打击 | SeekerStrike | 追踪打击 |
-| SetupStrike | 准备打击 | Severance | 断裂 |
-| ShiningStrike | 闪耀打击 | Shiv | 小刀 |
-| SicEm | 放狗咬 | Skewer | 串刺 |
-| Slice | 切割 | Snap | 折断 |
-| SolarStrike | 太阳打击 | SoulStorm | 灵魂风暴 |
-| SovereignBlade | 至高之刃 | Spite | 怨恨 |
-| Squash | 压碎 | Squeeze | 挤压 |
-| Strangle | 扼杀 | StrikeDefect | 打击(故障机器人) |
-| StrikeIronclad | 打击(铁甲战士) | StrikeNecrobinder | 打击(亡灵师) |
-| StrikeRegent | 打击(摄政) | StrikeSilent | 打击(沉默猎手) |
-| SuckerPunch | 偷袭 | Sunder | 粉碎 |
-| Supermassive | 超大质量 | Suppress | 压制 |
-| Synthesis | 合成 | TagTeam | 车轮战 |
-| TearAsunder | 撕裂虚空 | TeslaCoil | 特斯拉线圈 |
-| TheHunt | 狩猎 | TheScythe | 死神镰刀 |
-| Thrash | 猛打 | ThrummingHatchet | 嗡鸣手斧 |
-| TimesUp | 时间到 | TwinStrike | 双重打击 |
-| UltimateStrike | 终极打击 | Unleash | 释放 |
-| Unrelenting | 不屈 | Uppercut | 上勾拳 |
-| Uproar | 骚动 | Veilpiercer | 破幕者 |
-| Whistle | 口哨 | WroughtInWar | 战火锻造 |
 
-</details>
+| 类名              | 中文名        | 类名                | 中文名       |
+| --------------- | ---------- | ----------------- | --------- |
+| AdaptiveStrike  | 自适应打击      | AllForOne         | 万箭齐发      |
+| Anger           | 怒火         | AshenStrike       | 灰烬打击      |
+| Assassinate     | 暗杀         | Backstab          | 背刺        |
+| BallLightning   | 球状闪电       | Barrage           | 弹幕        |
+| Bash            | 猛击         | BeamCell          | 光束单元      |
+| BeatDown        | 痛殴         | BeatIntoShape     | 锤炼成型      |
+| Begone          | 退散         | BlightStrike      | 枯萎打击      |
+| Bludgeon        | 重击         | BodySlam          | 碾压        |
+| Bolas           | 流星锤        | Bombardment       | 轰炸        |
+| Break           | 破碎         | Bully             | 欺凌        |
+| Bury            | 埋葬         | ByrdSwoop         | 鸟类俯冲      |
+| CelestialMight  | 天界之力       | Cinder            | 余烬        |
+| Clash           | 冲突         | Claw              | 利爪        |
+| ColdSnap        | 寒流         | CollisionCourse   | 碰撞航线      |
+| Comet           | 彗星         | CompileDriver     | 编译驱动      |
+| CrescentSpear   | 新月之矛       | DaggerThrow       | 飞刀投掷      |
+| Dash            | 冲刺         | DeathMarch        | 死亡进军      |
+| Debilitate      | 衰弱         | Defile            | 亵渎        |
+| Devastate       | 毁灭         | Dismantle         | 拆解        |
+| DrainPower      | 汲取能量       | Eradicate         | 根除        |
+| FallingStar     | 坠星         | Fear              | 恐惧        |
+| Feed            | 吞噬         | Fetch             | 取回        |
+| FiendFire       | 魔焰         | FightMe           | 来战        |
+| Finisher        | 终结         | Fisticuffs        | 拳击        |
+| FlashOfSteel    | 钢铁闪光       | Flatten           | 压扁        |
+| Flechettes      | 飞镖         | FocusedStrike     | 专注打击      |
+| Ftl             | 超光速        | GammaBlast        | 伽马射线      |
+| GangUp          | 围攻         | GiantRock         | 巨岩        |
+| GoForTheEyes    | 直捣黄龙 [已修复] | GoldAxe           | 黄金斧       |
+| Grapple         | 擒拿         | Graveblast        | 墓穴爆破      |
+| GuidingStar     | 引导之星       | GunkUp            | 粘液        |
+| HandOfGreed     | 贪婪之手       | Hang              | 绞刑        |
+| Headbutt        | 头槌         | HeavenlyDrill     | 天钻        |
+| Hegemony        | 霸权         | HeirloomHammer    | 传家之锤      |
+| HelixDrill      | 螺旋钻        | Hemokinesis       | 血液操控      |
+| IceLance        | 冰矛         | IronWave          | 铁浪        |
+| Jackpot         | 头奖         | KinglyKick        | 帝王踢       |
+| KinglyPunch     | 帝王拳        | Knockdown         | 击倒        |
+| KnockoutBlow    | 致命一击       | LeadingStrike     | 引领打击      |
+| LunarBlast      | 月光冲击       | MadScience        | 疯狂科学      |
+| MakeItSo        | 就这么办       | Mangle            | 撕裂        |
+| Maul            | 重锤         | MementoMori       | 死亡勿忘      |
+| MeteorStrike    | 流星打击       | MindBlast         | 精神冲击      |
+| MinionDiveBomb  | 仆从俯冲       | MinionStrike      | 仆从打击      |
+| Misery          | 苦难         | MoltenFist        | 熔岩之拳      |
+| MomentumStrike  | 动量打击       | Murder            | 谋杀        |
+| NeowsFury       | 尼奥之怒       | Neutralize        | 中和        |
+| Null            | 归零         | Omnislice         | 全方位斩      |
+| Peck            | 啄击         | PerfectedStrike   | 完美打击      |
+| PhotonCut       | 光子斩        | Pillage           | 掠夺        |
+| Pinpoint        | 精准         | PoisonedStab      | 毒刺        |
+| Poke            | 戳击         | PommelStrike      | 刀柄打击      |
+| Pounce          | 猛扑         | PreciseCut        | 精确切割      |
+| Predator        | 捕食者        | Protector         | 保护者       |
+| PullFromBelow   | 冥界之握       | Rampage           | 暴走        |
+| Rattle          | 嘎嘎作响       | Reap              | 收割        |
+| Reave           | 劫掠         | Rebound           | 反弹        |
+| Refract         | 折射         | Rend              | 撕扯        |
+| RightHandHand   | 右手之手       | RocketPunch       | 火箭拳       |
+| Salvo           | 齐射         | Scrape            | 刮削        |
+| SculptingStrike | 雕塑打击       | SeekerStrike      | 追踪打击      |
+| SetupStrike     | 准备打击       | Severance         | 断裂        |
+| ShiningStrike   | 闪耀打击       | Shiv              | 小刀        |
+| SicEm           | 放狗咬        | Skewer            | 串刺        |
+| Slice           | 切割         | Snap              | 折断        |
+| SolarStrike     | 太阳打击       | SoulStorm         | 灵魂风暴      |
+| SovereignBlade  | 至高之刃       | Spite             | 怨恨        |
+| Squash          | 压碎         | Squeeze           | 挤压        |
+| Strangle        | 扼杀         | StrikeDefect      | 打击(故障机器人) |
+| StrikeIronclad  | 打击(铁甲战士)   | StrikeNecrobinder | 打击(亡灵师)   |
+| StrikeRegent    | 打击(摄政)     | StrikeSilent      | 打击(沉默猎手)  |
+| SuckerPunch     | 偷袭         | Sunder            | 粉碎        |
+| Supermassive    | 超大质量       | Suppress          | 压制        |
+| Synthesis       | 合成         | TagTeam           | 车轮战       |
+| TearAsunder     | 撕裂虚空       | TeslaCoil         | 特斯拉线圈     |
+| TheHunt         | 狩猎         | TheScythe         | 死神镰刀      |
+| Thrash          | 猛打         | ThrummingHatchet  | 嗡鸣手斧      |
+| TimesUp         | 时间到        | TwinStrike        | 双重打击      |
+| UltimateStrike  | 终极打击       | Unleash           | 释放        |
+| Unrelenting     | 不屈         | Uppercut          | 上勾拳       |
+| Uproar          | 骚动         | Veilpiercer       | 破幕者       |
+| Whistle         | 口哨         | WroughtInWar      | 战火锻造      |
+
+
+
 
 ### AOE 攻击牌（36 张）
 
-<details>
-<summary>点击展开完整名单</summary>
+点击展开完整名单
 
-| 类名 | 中文名 | 类名 | 中文名 |
-|------|--------|------|--------|
-| AstralPulse | 星界脉冲 | BansheesCry | 女妖之嚎 |
-| BoneShards | 骨骸碎片 | Breakthrough | 突破 |
-| Conflagration | 大火 | CrashLanding | 坠落着陆 |
-| CrushUnder | 碾碎 | DaggerSpray | 飞刀雨 |
-| DramaticEntrance | 华丽登场 | DyingStar | 垂死之星 |
-| EchoingSlash | 回响斩 | Exterminate | 灭绝 |
-| FlakCannon | 高射炮 | FlickFlack | 后空翻 |
-| FollowThrough | 贯穿 | GrandFinale | 大终章 |
-| HighFive | 击掌 | HowlFromBeyond | 彼岸嚎叫 |
-| Hyperbeam | 超级光束 | MeteorShower | 流星雨 |
-| PactsEnd | 契约终结 | Radiate | 辐射 |
-| Ricochet | 跳弹 | RipAndTear | 撕扯 |
-| SevenStars | 七星 | Shatter | 碎裂 |
-| Sow | 播种 | Stardust | 星尘 |
-| Stomp | 践踏 | SweepingBeam | 扫射光束 |
-| SweepingGaze | 扫视 | SwordBoomerang | 剑刃回旋 |
-| Thunderclap | 雷鸣 | Volley | 齐射 |
-| Whirlwind | 旋风 | | |
 
-</details>
+| 类名               | 中文名  | 类名             | 中文名  |
+| ---------------- | ---- | -------------- | ---- |
+| AstralPulse      | 星界脉冲 | BansheesCry    | 女妖之嚎 |
+| BoneShards       | 骨骸碎片 | Breakthrough   | 突破   |
+| Conflagration    | 大火   | CrashLanding   | 坠落着陆 |
+| CrushUnder       | 碾碎   | DaggerSpray    | 飞刀雨  |
+| DramaticEntrance | 华丽登场 | DyingStar      | 垂死之星 |
+| EchoingSlash     | 回响斩  | Exterminate    | 灭绝   |
+| FlakCannon       | 高射炮  | FlickFlack     | 后空翻  |
+| FollowThrough    | 贯穿   | GrandFinale    | 大终章  |
+| HighFive         | 击掌   | HowlFromBeyond | 彼岸嚎叫 |
+| Hyperbeam        | 超级光束 | MeteorShower   | 流星雨  |
+| PactsEnd         | 契约终结 | Radiate        | 辐射   |
+| Ricochet         | 跳弹   | RipAndTear     | 撕扯   |
+| SevenStars       | 七星   | Shatter        | 碎裂   |
+| Sow              | 播种   | Stardust       | 星尘   |
+| Stomp            | 践踏   | SweepingBeam   | 扫射光束 |
+| SweepingGaze     | 扫视   | SwordBoomerang | 剑刃回旋 |
+| Thunderclap      | 雷鸣   | Volley         | 齐射   |
+| Whirlwind        | 旋风   |                |      |
+
+
+
 
 ---
 
@@ -420,10 +436,12 @@ STS2 多人模式使用**确定性锁步**：所有客户端独立执行相同�
 
 **解决：** 利用 `PlayCardAction.TargetId` 作为信号载体：
 
-| 场景 | TargetId | 含义 |
-|------|----------|------|
-| 正常 AOE | `null` | 只打敌人 |
+
+| 场景     | TargetId      | 含义      |
+| ------ | ------------- | ------- |
+| 正常 AOE | `null`        | 只打敌人    |
 | 友伤 AOE | `自身 CombatId` | 信号：扩展目标 |
+
 
 这个 TargetId 通过 `NetPlayCardAction` 自动序列化/反序列化并同步到所有客户端。
 
@@ -457,15 +475,18 @@ AOE 友伤排除自己**和自己的召唤物**（Pet），通过 `Creature.PetO
 
 ### 当前已修复
 
-| 卡牌 | 崩溃点 | 修复方式 |
-|------|--------|---------|
+
+| 卡牌           | 崩溃点                              | 修复方式             |
+| ------------ | -------------------------------- | ---------------- |
 | GoForTheEyes | `Target.Monster.IntendsToAttack` | 对队友跳过意图判断，直接施加虚弱 |
+
 
 ### 如何添加新的危险卡牌修复
 
 如果你发现某张卡牌导致崩溃：
 
 **临时方案** — 加入黑名单（不需要写代码）：
+
 ```json
 "dangerous_cards_blacklist": ["CrashCard"]
 ```
@@ -501,7 +522,7 @@ public static class YourCardPatch
 }
 ```
 
-2. 在 `FriendlyFireConfig.cs` 的 `FixedDangerousCards` 中注册：
+1. 在 `FriendlyFireConfig.cs` 的 `FixedDangerousCards` 中注册：
 
 ```csharp
 public static readonly HashSet<string> FixedDangerousCards = new()
@@ -511,28 +532,34 @@ public static readonly HashSet<string> FixedDangerousCards = new()
 };
 ```
 
-3. 重新编译即可
+1. 重新编译即可
 
 ---
 
 ## FAQ
 
 **Q: 友伤会对自己生效吗？**
+
 > 不会。AOE 排除了攻击者本人和攻击者的所有召唤物/宠物。
 
 **Q: 单人模式有用吗？**
+
 > 单体友伤在单人模式下没有可选的队友目标。AOE 友伤同理（只有自己和敌人，自己被排除，效果等于原版）。该 Mod 主要为**多人合作模式**设计。
 
 **Q: 友伤会触发卡牌的所有效果吗？**
+
 > 是的。伤害、debuff（易伤、虚弱、中毒等）、特殊效果都会正常生效。唯一的例外是访问 `Monster` 属性的卡牌，这些会使用安全的替代逻辑。
 
 **Q: 多人游戏会断连吗？**
+
 > 不会。Mod 使用 TargetId 信号机制确保所有客户端执行相同的目标计算逻辑。前提是所有玩家安装相同版本且白名单配置一致。
 
 **Q: 配置文件写错了会怎样？**
+
 > Mod 会在控制台输出错误日志，并使用默认配置（全部允许 + Alt 键）继续运行，不会崩溃。
 
 **Q: 怎么查看 Mod 日志？**
+
 > 游戏控制台中搜索 `[Friendly Fire]` 前缀的日志。
 
 ---
@@ -558,13 +585,15 @@ public static readonly HashSet<string> FixedDangerousCards = new()
 
 ### 使用的工具链
 
-| 工具 | 用途 |
-|------|------|
-| [Claude Code](https://claude.com/claude-code) | AI 编程助手，代码生成 / 反编译脚本 / 架构设计 |
-| [ICSharpCode.Decompiler](https://github.com/icsharpcode/ILSpy) | 游戏 DLL 反编译（程序化调用） |
-| [Harmony 2.4.2](https://github.com/pardeike/Harmony) | 运行时方法 Patch |
-| [BepInEx.AssemblyPublicizer](https://github.com/BepInEx/BepInEx.AssemblyPublicizer) | 访问游戏 private/internal 成员 |
-| [Godot.NET.Sdk 4.5.1](https://godotengine.org/) | 编译 + .pck 导出 |
+
+| 工具                                                                                  | 用途                          |
+| ----------------------------------------------------------------------------------- | --------------------------- |
+| [Claude Code](https://claude.com/claude-code)                                       | AI 编程助手，代码生成 / 反编译脚本 / 架构设计 |
+| [ICSharpCode.Decompiler](https://github.com/icsharpcode/ILSpy)                      | 游戏 DLL 反编译（程序化调用）           |
+| [Harmony 2.4.2](https://github.com/pardeike/Harmony)                                | 运行时方法 Patch                 |
+| [BepInEx.AssemblyPublicizer](https://github.com/BepInEx/BepInEx.AssemblyPublicizer) | 访问游戏 private/internal 成员    |
+| [Godot.NET.Sdk 4.5.1](https://godotengine.org/)                                     | 编译 + .pck 导出                |
+
 
 ---
 
