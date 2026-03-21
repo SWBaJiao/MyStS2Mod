@@ -106,7 +106,9 @@
         <MakeDir Directories="$(ModsPath)FriendlyFire/" />
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)FriendlyFire/" />
         <Copy SourceFiles="mod_manifest.json" DestinationFolder="$(ModsPath)FriendlyFire/" />
-        <Copy SourceFiles="friendly_fire_config.json" DestinationFolder="$(ModsPath)FriendlyFire/" />
+        <Copy SourceFiles="friendly_fire_config.cfg" DestinationFolder="$(ModsPath)FriendlyFire/" />
+        <!-- 删除旧的 .json 配置文件（v1 遗留），避免游戏 manifest scanner 报错 -->
+        <Delete Files="$(ModsPath)FriendlyFire/friendly_fire_config.json" Condition="Exists('$(ModsPath)FriendlyFire/friendly_fire_config.json')" />
     </Target>
 
     <!-- ==================== Publish 时导出 .pck ==================== -->

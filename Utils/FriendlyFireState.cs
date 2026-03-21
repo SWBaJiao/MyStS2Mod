@@ -9,14 +9,12 @@ namespace MyStS2Mod.Utils
     public static class FriendlyFireState
     {
         /// <summary>
-        /// 开关键是否正在被按住
-        /// 所有 Patch 都检查此属性来决定是否启用友伤
+        /// 开关键是否正在被按住（本地输入，仅用于 UI 层）
         /// </summary>
         public static bool IsToggleKeyHeld
         {
             get
             {
-                // Godot 的 Input.IsKeyPressed 检测物理按键状态
                 var key = FriendlyFireConfig.ToggleKey switch
                 {
                     "Alt" => Key.Alt,
@@ -35,9 +33,21 @@ namespace MyStS2Mod.Utils
         }
 
         /// <summary>
-        /// 当前正在进行目标选择的卡牌类名（由 Patch 设置）
-        /// 用于判断白名单
+        /// 当前正在进行目标选择的卡牌类名（UI 层使用）
         /// </summary>
         public static string? CurrentTargetingCardName { get; set; }
+
+        /// <summary>
+        /// AOE 友伤执行标志（执行层 — 网络同步安全）
+        ///
+        /// 当此标志为 true 时，GetPossibleTargets 将扩展目标列表。
+        /// 此标志不依赖本地输入，而是从 PlayCardAction 的 TargetId 信号推断。
+        ///
+        /// 生命周期：
+        ///   - PlayCardAction.ExecuteAction Prefix 中设置（所有客户端都执行）
+        ///   - 下一次 PlayCardAction.ExecuteAction Prefix 时重置
+        ///   - Godot 是单线程的，不存在并发问题
+        /// </summary>
+        public static bool IsAoeFriendlyFireActive { get; set; }
     }
 }

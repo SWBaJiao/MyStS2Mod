@@ -50,7 +50,8 @@ namespace MyStS2Mod.Utils
             try
             {
                 var dllDir = Path.GetDirectoryName(typeof(FriendlyFireConfig).Assembly.Location);
-                var configPath = Path.Combine(dllDir ?? ".", "friendly_fire_config.json");
+                // 使用 .cfg 扩展名，避免被游戏的 ReadModsInDirRecursive 误识别为 mod manifest
+                var configPath = Path.Combine(dllDir ?? ".", "friendly_fire_config.cfg");
 
                 if (!File.Exists(configPath))
                 {

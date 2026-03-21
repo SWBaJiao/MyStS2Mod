@@ -117,7 +117,7 @@ do_output() {
 
     # 复制 manifest 和配置
     cp "$SCRIPT_DIR/mod_manifest.json" "$OUTPUT_DIR/"
-    cp "$SCRIPT_DIR/friendly_fire_config.json" "$OUTPUT_DIR/"
+    cp "$SCRIPT_DIR/friendly_fire_config.cfg" "$OUTPUT_DIR/"
 
     # 导出 .pck（如果请求且 Godot 可用）
     if [ "$with_pck" = "true" ]; then
