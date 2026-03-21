@@ -1,7 +1,7 @@
 {
   "id": "FriendlyFire",
   "name": "Friendly Fire",
-  "author": "guojiayu",
+  "author": "SWBaJiao",
   "description": "Hold Alt to target allies with attack cards. AOE attacks hit everyone except yourself. JSON whitelist supported.",
   "version": "v1.0.0",
   "has_pck": true,
