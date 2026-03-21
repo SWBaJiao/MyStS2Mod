@@ -1,4 +1,4 @@
-# ⚔️ Friendly Fire Mod — 杀戮尖塔 2 友伤模组
+# FriendlyFire-StS2 — 杀戮尖塔 2 友伤模组
 
 > 按住 `Alt` 键，让你的攻击牌也能对队友「友好地」挥出一刀。
 
@@ -6,90 +6,163 @@
 ![.NET 9.0](https://img.shields.io/badge/.NET-9.0-blue?style=flat-square)
 ![Harmony 2.4.2](https://img.shields.io/badge/Harmony-2.4.2-green?style=flat-square)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+![AI Assisted](https://img.shields.io/badge/AI%20Assisted-Claude-blueviolet?style=flat-square)
 
 ---
 
-## 📖 功能介绍
+## 功能介绍
 
 | 功能 | 说明 |
 |------|------|
 | **单体攻击友伤** | 按住 `Alt` 键时，`AnyEnemy` 类型的攻击牌可以选择队友作为目标 |
-| **AOE 扩展攻击** | 按住 `Alt` 键时，`AllEnemies` 类型的 AOE 牌会攻击**除自己以外的所有人**（敌人 + 队友） |
+| **AOE 扩展攻击** | 按住 `Alt` 键时，`AllEnemies` 类型的 AOE 牌会攻击**其他玩家的角色**（不伤自己和自己的召唤物） |
 | **特殊效果生效** | 卡牌附带的 debuff（易伤、虚弱等）对队友同样生效 |
 | **JSON 白名单** | 通过配置文件精确控制哪些卡牌允许友伤 |
 | **危险卡牌保护** | 自动拦截访问 `Monster` 属性的卡牌，防止游戏崩溃 |
+| **屏幕提示** | 按住开关键时屏幕顶部显示"友军伤害开启"红色提示 |
+| **多人同步安全** | 通过 TargetId 信号机制确保所有客户端状态一致，不会断连 |
 
 ### 工作流程
 
 ```
 玩家打出攻击牌
-  │
-  ├─ Alt 未按住 → 正常游戏逻辑（不变）
-  │
-  └─ Alt 按住
-       │
-       ├─ 单体攻击牌 → 检查白名单 → 允许选择队友
-       │                              ↓
-       │                         检查黑名单 → 已修复? → 执行安全替代逻辑
-       │                                       未修复? → 阻止友伤
-       │
-       └─ AOE 攻击牌 → 检查白名单 → 目标扩展为"除自己外所有人"
+  |
+  +-- Alt 未按住 --> 正常游戏逻辑（不变）
+  |
+  +-- Alt 按住
+       |
+       +-- 单体攻击牌 --> 检查白名单 --> 允许选择队友
+       |                               |
+       |                          检查黑名单 --> 已修复? --> 执行安全替代逻辑
+       |                                        未修复? --> 阻止友伤
+       |
+       +-- AOE 攻击牌 --> 检查白名单 --> 目标扩展为"敌人 + 其他玩家"
+                                        （排除自己和自己的召唤物）
 ```
 
 ---
 
-## 🚀 快速开始
+## 安装教程（玩家）
 
-### 安装（玩家）
+> **重要：安装任何 Mod 前，请先备份你的游戏存档！**
+>
+> 存档位置：
+> - **Windows:** `%APPDATA%\..\LocalLow\MegaCrit\SlayTheSpire2\`
+> - **macOS:** `~/Library/Application Support/MegaCrit/SlayTheSpire2/`
+>
+> 将整个文件夹复制一份到安全的地方即可。如果 Mod 出现问题，可以随时恢复。
 
-1. 从 [Releases](../../releases) 下载最新版 `MyStS2Mod.zip`
-2. 解压得到 `MyStS2Mod/` 文件夹
-3. 将整个文件夹复制到游戏的 `mods/` 目录：
+### 第一步：找到游戏根目录
+
+| 平台 | 游戏根目录路径 |
+|------|---------------|
+| **Windows** | `C:\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2\` |
+| **macOS** | `~/Library/Application Support/Steam/steamapps/common/Slay the Spire 2/SlayTheSpire2.app/Contents/Resources/` |
+
+> **提示：** 在 Steam 中右键游戏 → 管理 → 浏览本地文件，可以快速打开游戏根目录。
+
+### 第二步：创建 mods 文件夹
+
+在游戏根目录下创建名为 `mods` 的文件夹（如果已存在则跳过）：
 
 ```
-# macOS
-~/Library/Application Support/Steam/steamapps/common/Slay the Spire 2/
-  └── SlayTheSpire2.app/Contents/Resources/mods/
-        └── MyStS2Mod/            ← 放在这里
-              ├── MyStS2Mod.dll
-              ├── mod_manifest.json
-              └── friendly_fire_config.json
+游戏根目录/
+  +-- sts2.dll
+  +-- ...其他游戏文件...
+  +-- mods/              <-- 手动创建这个文件夹
 ```
 
-4. 启动游戏，在 Mod 管理器中启用 **Friendly Fire**
-5. 战斗中按住 `Alt` 键拖动攻击牌即可选择队友
+### 第三步：安装前置依赖 BaseLib
+
+本 Mod 依赖 [Alchyr/BaseLib-StS2](https://github.com/Alchyr/BaseLib-StS2)，这是大部分 STS2 Mod 的基础库，**必须先安装**。
+
+1. 前往 [BaseLib-StS2 Releases](https://github.com/Alchyr/BaseLib-StS2/releases) 下载最新版
+2. 解压后将 `BaseLib` 文件夹放入 `mods/` 目录
+
+```
+mods/
+  +-- BaseLib/
+        +-- BaseLib.dll
+        +-- BaseLib.pck
+        +-- BaseLib.json
+```
+
+### 第四步：安装 FriendlyFire
+
+1. 从本项目的 [Releases](../../releases) 页面下载最新版 `FriendlyFire.zip`
+2. 解压后将 `FriendlyFire` 文件夹放入 `mods/` 目录
+
+```
+mods/
+  +-- BaseLib/                      <-- 前置依赖（第三步安装的）
+  |     +-- BaseLib.dll
+  |     +-- BaseLib.pck
+  |     +-- BaseLib.json
+  |
+  +-- FriendlyFire/                 <-- 本 Mod
+        +-- FriendlyFire.dll        <-- 核心逻辑
+        +-- FriendlyFire.pck        <-- Godot 资源包
+        +-- mod_manifest.json       <-- Mod 描述文件
+        +-- friendly_fire_config.cfg <-- 配置文件（可自定义）
+```
+
+### 第五步：启动游戏
+
+1. 启动杀戮尖塔 2
+2. 进入主菜单 → **Mod 管理器**
+3. 确认 **BaseLib** 和 **Friendly Fire** 都已启用
+4. 开始多人合作战斗
+
+### 使用方式
+
+| 操作 | 效果 |
+|------|------|
+| **不按 Alt** 打出攻击牌 | 正常行为，和原版完全一样 |
+| **按住 Alt** 打出单体攻击牌 | 可以选择队友作为目标，屏幕顶部出现红色提示 |
+| **按住 Alt** 打出 AOE 攻击牌 | AOE 命中所有敌人 + 其他玩家的角色（不伤自己和自己的召唤物） |
+
+> **多人游戏注意：** 所有玩家都需要安装**相同版本**的 Mod，且 `friendly_fire_config.cfg` 中的白名单配置**必须一致**，否则可能导致状态不同步断连。建议由房主统一分发配置文件。
+
+### 卸载方式
+
+1. 删除 `mods/FriendlyFire/` 文件夹
+2. 重启游戏即可恢复原版，不影响存档
 
 ### 从源码编译（开发者）
 
 **前置要求：**
 - [.NET SDK 9.0+](https://dotnet.microsoft.com/download)（macOS: `brew install dotnet`）
+- [Godot 4.5.1 Mono](https://godotengine.org/download)（可选，导出 .pck 需要）
 - 杀戮尖塔 2 已安装（需要引用游戏 DLL）
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/StS2-FriendlyFire.git
-cd StS2-FriendlyFire
+git clone https://github.com/SWBaJiao/FriendlyFire-StS2.git
+cd FriendlyFire-StS2
 
 # 一键编译
 chmod +x build.sh
 ./build.sh
 
-# 编译产物在 output/MyStS2Mod/ 目录下
+# 编译产物在 output/FriendlyFire/ 目录下
 ```
 
 **编译脚本命令：**
 
 | 命令 | 说明 |
 |------|------|
-| `./build.sh` | 编译 Release 版本，输出到 `output/MyStS2Mod/` |
+| `./build.sh` | 编译 Release 版本，输出到 `output/FriendlyFire/` |
 | `./build.sh debug` | 编译 Debug 版本 |
+| `./build.sh publish` | 编译 + 导出 .pck（需要 Godot 4.5.1 Mono） |
 | `./build.sh clean` | 清理所有编译产物 |
 
 ---
 
-## ⚙️ 配置说明
+## 配置说明
 
-编辑 `friendly_fire_config.json` 来自定义 Mod 行为。修改后**重启游戏**生效。
+编辑 `friendly_fire_config.cfg` 来自定义 Mod 行为。修改后**重启游戏**生效。
+
+> 配置文件使用 `.cfg` 扩展名（内容为 JSON 格式），以避免被游戏的 Mod 加载器误识别为 mod_manifest。
 
 ### 配置项一览
 
@@ -148,7 +221,7 @@ chmod +x build.sh
 
 ---
 
-## 🃏 卡牌名单速查
+## 卡牌名单速查
 
 ### 单体攻击牌（164 张）
 
@@ -185,7 +258,7 @@ chmod +x build.sh
 | Flechettes | 飞镖 | FocusedStrike | 专注打击 |
 | Ftl | 超光速 | GammaBlast | 伽马射线 |
 | GangUp | 围攻 | GiantRock | 巨岩 |
-| GoForTheEyes ⚡ | 直捣黄龙 | GoldAxe | 黄金斧 |
+| GoForTheEyes | 直捣黄龙 [已修复] | GoldAxe | 黄金斧 |
 | Grapple | 擒拿 | Graveblast | 墓穴爆破 |
 | GuidingStar | 引导之星 | GunkUp | 粘液 |
 | HandOfGreed | 贪婪之手 | Hang | 绞刑 |
@@ -240,8 +313,6 @@ chmod +x build.sh
 | Uproar | 骚动 | Veilpiercer | 破幕者 |
 | Whistle | 口哨 | WroughtInWar | 战火锻造 |
 
-> ⚡ 标记 = 有专属 Patch 修复的危险卡牌，可安全用于友伤
-
 </details>
 
 ### AOE 攻击牌（36 张）
@@ -274,70 +345,103 @@ chmod +x build.sh
 
 ---
 
-## 🏗️ 项目结构
+## 项目结构
 
 ```
-MyStS2Mod/
-├── Plugin.cs                  # Mod 入口，注册 Harmony Patch
-├── ModInfo.cs                 # Mod 元信息（GUID、版本号）
-├── mod_manifest.json          # 游戏 Mod 加载器识别文件
-├── friendly_fire_config.json  # 配置文件（白名单、开关键、黑名单）
-├── build.sh                   # 一键编译脚本
-├── MyStS2Mod.csproj           # .NET 项目文件
-├── NuGet.config               # NuGet 包源配置
-│
-├── Patches/
-│   ├── TargetingPatches.cs    # 核心 Patch: 目标选择系统 (3 个 Patch)
-│   ├── AoePatches.cs          # AOE Patch: 多目标扩展
-│   └── CardSpecificPatches.cs # 危险卡牌专属 Patch (GoForTheEyes 等)
-│
-├── Utils/
-│   ├── FriendlyFireConfig.cs  # JSON 配置加载 & 白名单/黑名单判定
-│   ├── FriendlyFireState.cs   # 运行时状态（按键检测、当前卡牌追踪）
-│   └── ModHelper.cs           # 通用工具（资源加载、本地化）
-│
-└── Assets/
-    └── localization/
-        ├── en.json            # 英文本地化
-        └── zh-CN.json         # 中文本地化
+FriendlyFire-StS2/
++-- Plugin.cs                     # Mod 入口，注册 Harmony Patch + UI 指示器
++-- ModInfo.cs                    # Mod 元信息（GUID、版本号）
++-- mod_manifest.json             # 游戏 Mod 加载器识别文件
++-- friendly_fire_config.cfg      # 配置文件（白名单、开关键、黑名单）
++-- build.sh                      # 一键编译脚本
++-- MyStS2Mod.csproj              # Godot.NET.Sdk 项目文件
+|
++-- Patches/
+|   +-- TargetingPatches.cs       # UI 层: 目标选择 + 执行层: 目标验证 (5 个 Patch)
+|   +-- AoePatches.cs             # 执行层: AOE 目标扩展（排除自己和召唤物）
+|   +-- MultiplayerSyncPatches.cs # 网络层: AOE 友伤信号编码/解码 (2 个 Patch)
+|   +-- CardSpecificPatches.cs    # 危险卡牌专属 Patch (GoForTheEyes 等)
+|
++-- UI/
+|   +-- FriendlyFireIndicator.cs  # 屏幕提示: 按住开关键时显示红色提示条
+|
++-- Utils/
+|   +-- FriendlyFireConfig.cs     # JSON 配置加载 & 白名单/黑名单判定
+|   +-- FriendlyFireState.cs      # 运行时状态（按键检测、AOE 信号标志）
+|   +-- ModHelper.cs              # 通用工具（资源加载、本地化）
 ```
 
 ---
 
-## 🔧 技术实现
+## 技术实现
 
-本 Mod 通过 [Harmony](https://github.com/pardeike/Harmony) 运行时 Patch 了游戏的 5 个方法：
+本 Mod 通过 [Harmony](https://github.com/pardeike/Harmony) 运行时 Patch 了游戏的 9 个方法，分为三层架构：
 
-### Patch 列表
-
-| # | 目标方法 | Patch 类型 | 作用 |
-|---|---------|-----------|------|
-| 1 | `NTargetManager.AllowedToTargetCreature` | Postfix | UI 层面允许选中队友 |
-| 2 | `CardModel.IsValidTarget` | Postfix | 逻辑层面允许队友作为合法目标 |
-| 3 | `NMouseCardPlay.SingleCreatureTargeting` | Prefix + Postfix | 追踪当前打出的卡牌类名（供白名单查询） |
-| 4 | `AttackCommand.GetPossibleTargets` | Postfix | AOE 目标扩展为除自己外所有人 |
-| 5 | `GoForTheEyes.OnPlay` | Prefix | 安全替代逻辑，跳过 `Monster.IntendsToAttack` |
-
-### 目标选择链路
+### 架构总览
 
 ```
-卡牌打出 → NMouseCardPlay.TargetSelection
-              │
-              ├─ AnyEnemy/AnyAlly → SingleCreatureTargeting
-              │     │
-              │     ├─ NTargetManager.StartTargeting(targetType)
-              │     │     └─ AllowedToTargetCreature()  ← Patch 1
-              │     │
-              │     └─ CardModel.IsValidTarget()        ← Patch 2
-              │
-              └─ AllEnemies → MultiCreatureTargeting
-                    └─ OnPlay → AttackCommand
-                          └─ GetPossibleTargets()       ← Patch 4
++-----------------------------------------------------------+
+|                    UI 层（仅本地）                           |
+|  检查 Alt 键 -- 控制玩家能选中谁                             |
+|                                                           |
+|  [1] AllowedToTargetNode    -- 鼠标悬停: 队友可高亮          |
+|  [2] AllowedToTargetCreature -- 备用（防 JIT 内联）         |
+|  [3] TrackTargetingCard      -- 追踪当前选目标的卡牌         |
+|  [4] TrackTargetSelection    -- 追踪备用                    |
++---------------------------+-------------------------------+
+                            | 玩家确认出牌
++---------------------------v-------------------------------+
+|               信号编码层（本地 --> 网络）                     |
+|  将 Alt 状态编码到 PlayCardAction.TargetId                  |
+|                                                           |
+|  [5] PlayCardAction 构造函数                                |
+|      Alt + AOE 卡 --> TargetId = 自身CombatId（信号）       |
+|      --> 通过 NetPlayCardAction 自动同步到所有客户端          |
++---------------------------+-------------------------------+
+                            | Action 网络同步
++---------------------------v-------------------------------+
+|              执行层（所有客户端一致）                         |
+|  不检查 Alt 键 -- 只用白名单 + 信号标志                      |
+|                                                           |
+|  [6] ExecuteAction Prefix  -- 检测信号, 设置 AOE 友伤标志   |
+|  [7] IsValidTarget         -- 允许白名单卡牌攻击队友         |
+|  [8] GetPossibleTargets    -- 读取标志, 扩展 AOE 目标       |
+|  [9] GoForTheEyes OnPlay   -- 特殊卡牌安全处理              |
+|                                                           |
+|  所有端输入相同 --> 输出相同 --> 不 desync                   |
++-----------------------------------------------------------+
+```
+
+### 多人同步机制详解
+
+STS2 多人模式使用**确定性锁步**：所有客户端独立执行相同的 Action，执行后比较 checksum。
+
+**问题：** AOE 卡没有 targetId，`GetPossibleTargets` 在各端独立计算。如果只在按 Alt 的端扩展目标，其他端不扩展 → 状态不一致 → 断连。
+
+**解决：** 利用 `PlayCardAction.TargetId` 作为信号载体：
+
+| 场景 | TargetId | 含义 |
+|------|----------|------|
+| 正常 AOE | `null` | 只打敌人 |
+| 友伤 AOE | `自身 CombatId` | 信号：扩展目标 |
+
+这个 TargetId 通过 `NetPlayCardAction` 自动序列化/反序列化并同步到所有客户端。
+
+### 召唤物排除机制
+
+AOE 友伤排除自己**和自己的召唤物**（Pet），通过 `Creature.PetOwner` 属性判断所属：
+
+```
+亡灵契约师(Player A) 打出 AOE:
+  亡灵契约师本体: Player=A        --> 属于A --> 排除
+  骷髅兵召唤物:   PetOwner=A      --> 属于A --> 排除
+  铁甲战士(Player B): Player=B    --> 不属于A --> 命中
+  铁甲战士的宠物:   PetOwner=B    --> 不属于A --> 命中
 ```
 
 ---
 
-## 🛡️ 危险卡牌系统
+## 危险卡牌系统
 
 部分卡牌在 `OnPlay` 中访问了 `cardPlay.Target.Monster` 属性。玩家的 `Creature` 对象没有 `Monster`（为 `null`），对队友使用这些卡牌会导致 **NullReferenceException** 崩溃。
 
@@ -346,9 +450,9 @@ MyStS2Mod/
 ```
 三道防线:
 
-1. 黑名单  → 配置 dangerous_cards_blacklist，直接阻止友伤
-2. 专属 Patch → 编写 Harmony Prefix 替换为安全逻辑
-3. 标记已修复 → 添加到 FixedDangerousCards，绕过黑名单
+1. 黑名单  --> 配置 dangerous_cards_blacklist，直接阻止友伤
+2. 专属 Patch --> 编写 Harmony Prefix 替换为安全逻辑
+3. 标记已修复 --> 添加到 FixedDangerousCards，绕过黑名单
 ```
 
 ### 当前已修复
@@ -378,7 +482,7 @@ public static class YourCardPatch
                        CardPlay cardPlay, ref Task __result)
     {
         if (cardPlay.Target == null || !cardPlay.Target.IsPlayer)
-            return true;  // 非队友目标 → 走原逻辑
+            return true;  // 非队友目标 -> 走原逻辑
 
         // 替代逻辑：造成伤害 + 安全的特殊效果
         __result = SafeOnPlay(__instance, choiceContext, cardPlay);
@@ -403,7 +507,7 @@ public static class YourCardPatch
 public static readonly HashSet<string> FixedDangerousCards = new()
 {
     "GoForTheEyes",
-    "YourCard"       // ← 添加这一行
+    "YourCard"       // <-- 添加这一行
 };
 ```
 
@@ -411,16 +515,19 @@ public static readonly HashSet<string> FixedDangerousCards = new()
 
 ---
 
-## ❓ FAQ
+## FAQ
 
 **Q: 友伤会对自己生效吗？**
-> 不会。Mod 明确排除了自己，AOE 的目标列表是「除攻击者以外的所有 Creature」。
+> 不会。AOE 排除了攻击者本人和攻击者的所有召唤物/宠物。
 
 **Q: 单人模式有用吗？**
 > 单体友伤在单人模式下没有可选的队友目标。AOE 友伤同理（只有自己和敌人，自己被排除，效果等于原版）。该 Mod 主要为**多人合作模式**设计。
 
 **Q: 友伤会触发卡牌的所有效果吗？**
 > 是的。伤害、debuff（易伤、虚弱、中毒等）、特殊效果都会正常生效。唯一的例外是访问 `Monster` 属性的卡牌，这些会使用安全的替代逻辑。
+
+**Q: 多人游戏会断连吗？**
+> 不会。Mod 使用 TargetId 信号机制确保所有客户端执行相同的目标计算逻辑。前提是所有玩家安装相同版本且白名单配置一致。
 
 **Q: 配置文件写错了会怎样？**
 > Mod 会在控制台输出错误日志，并使用默认配置（全部允许 + Alt 键）继续运行，不会崩溃。
@@ -430,12 +537,43 @@ public static readonly HashSet<string> FixedDangerousCards = new()
 
 ---
 
-## 🤝 贡献
+## AI 编程说明
+
+本项目在开发过程中大量使用了 AI 辅助编程（Claude），以下是实践中的一些提示：
+
+### 适合 AI 辅助的部分
+
+- **反编译分析** — 让 AI 编写 ICSharpCode.Decompiler 脚本，批量反编译游戏 DLL 中的目标类，快速理解未文档化的内部 API
+- **Harmony Patch 编写** — 描述"我想让 X 方法在 Y 条件下返回 Z"，AI 能直接生成 Prefix/Postfix 代码和正确的 `[HarmonyPatch]` 属性
+- **多人同步设计** — 向 AI 描述"确定性锁步"的约束条件，它能帮助设计网络安全的 Patch 架构（UI 层 vs 执行层分离）
+- **边界情况发现** — AI 能通过反编译结果发现 async 方法的 Harmony Postfix 陷阱、JIT 内联导致 private 方法 Patch 失效等问题
+- **跨平台 csproj** — 自动生成 Windows/macOS/Linux 的条件路径检测
+
+### 需要人工把关的部分
+
+- **游戏逻辑理解** — AI 无法启动游戏，像"亡灵契约师的召唤物会被 AOE 打到"这类 bug 只有实际测试才能发现
+- **白名单校验** — 580 张卡牌的分类（单体/AOE/安全/危险）需要人工抽查确认
+- **网络同步测试** — desync 问题只能在真实多人环境中复现和验证
+- **Mod 兼容性** — 与其他 Mod 的冲突需要实际加载测试
+
+### 使用的工具链
+
+| 工具 | 用途 |
+|------|------|
+| [Claude Code](https://claude.com/claude-code) | AI 编程助手，代码生成 / 反编译脚本 / 架构设计 |
+| [ICSharpCode.Decompiler](https://github.com/icsharpcode/ILSpy) | 游戏 DLL 反编译（程序化调用） |
+| [Harmony 2.4.2](https://github.com/pardeike/Harmony) | 运行时方法 Patch |
+| [BepInEx.AssemblyPublicizer](https://github.com/BepInEx/BepInEx.AssemblyPublicizer) | 访问游戏 private/internal 成员 |
+| [Godot.NET.Sdk 4.5.1](https://godotengine.org/) | 编译 + .pck 导出 |
+
+---
+
+## 贡献
 
 欢迎提交 Issue 和 PR！如果你发现新的危险卡牌（友伤时崩溃），请提交 Issue 并附上崩溃日志。
 
 ---
 
-## 📜 开源协议
+## 开源协议
 
 [MIT License](LICENSE) — 随意使用、修改、分发。

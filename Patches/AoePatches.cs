@@ -65,26 +65,62 @@ namespace MyStS2Mod.Patches
                 if (!FriendlyFireConfig.IsAoeAllowed(cardName)) return;
             }
 
-            // ===== 在原始敌人列表上追加队友（排除自己）=====
-            var alliesExceptSelf = combatState.Allies
-                .Where(c => c.IsAlive && !IsSameCreature(c, attacker))
+            // ===== 在原始敌人列表上追加其他玩家的角色（排除自己和自己的召唤物）=====
+            var attackerPlayer = GetOwnerPlayer(attacker);
+
+            var otherPlayerCreatures = combatState.Allies
+                .Where(c => c.IsAlive && !BelongsToPlayer(c, attackerPlayer))
                 .ToList();
 
-            if (alliesExceptSelf.Count == 0) return;
+            if (otherPlayerCreatures.Count == 0) return;
 
-            var combined = __result.Concat(alliesExceptSelf).ToList().AsReadOnly();
+            var combined = __result.Concat(otherPlayerCreatures).ToList().AsReadOnly();
             __result = combined;
         }
 
         /// <summary>
-        /// 判断两个 Creature 是否是同一个（三重比较保险）
+        /// 获取一个 Creature 所属的 Player。
+        ///
+        /// STS2 中 Creature 与 Player 的关系：
+        ///   - 玩家角色：creature.Player = 对应的 Player
+        ///   - 召唤物/宠物：creature.Player = null, creature.PetOwner = 主人的 Player
+        ///   - 怪物：creature.Player = null, creature.PetOwner = null
         /// </summary>
-        private static bool IsSameCreature(Creature a, Creature b)
+        private static MegaCrit.Sts2.Core.Entities.Players.Player? GetOwnerPlayer(Creature creature)
         {
-            if (ReferenceEquals(a, b)) return true;
-            if (a.CombatId == b.CombatId) return true;
-            if (a.Player != null && b.Player != null && ReferenceEquals(a.Player, b.Player))
+            // 优先用 Player（玩家角色本身）
+            if (creature.Player != null)
+                return creature.Player;
+            // 其次用 PetOwner（召唤物的主人）
+            if (creature.PetOwner != null)
+                return creature.PetOwner;
+            return null;
+        }
+
+        /// <summary>
+        /// 判断 Creature 是否属于指定 Player（包括该玩家的召唤物）。
+        ///
+        /// 排除逻辑：
+        ///   亡灵契约师(Player A) 打出 AOE →
+        ///     亡灵契约师本体: Player=A → 属于A → 排除 ✅
+        ///     亡灵契约师的召唤物: PetOwner=A → 属于A → 排除 ✅
+        ///     铁甲战士(Player B): Player=B → 不属于A → 命中 ✅
+        ///     铁甲战士的宠物: PetOwner=B → 不属于A → 命中 ✅
+        /// </summary>
+        private static bool BelongsToPlayer(
+            Creature creature,
+            MegaCrit.Sts2.Core.Entities.Players.Player? player)
+        {
+            if (player == null) return false;
+
+            // 该生物本身就是这个玩家的角色
+            if (creature.Player != null && ReferenceEquals(creature.Player, player))
                 return true;
+
+            // 该生物是这个玩家的召唤物/宠物
+            if (creature.PetOwner != null && ReferenceEquals(creature.PetOwner, player))
+                return true;
+
             return false;
         }
     }
