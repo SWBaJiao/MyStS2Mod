@@ -34,6 +34,21 @@ namespace MyStS2Mod.Utils
         /// 黑名单中的卡牌将被阻止友伤（即使在白名单中也不行）
         /// 已有专属 Patch 修复的卡牌不需要加入黑名单
         /// </summary>
+        /// <summary>是否启用诅咒牌转移（按住触发键可将诅咒牌转移给队友）</summary>
+        public static bool CurseTransferEnabled { get; private set; } = true;
+
+        /// <summary>诅咒牌转移消耗的能量</summary>
+        public static int CurseTransferCost { get; private set; } = 1;
+
+        /// <summary>是否启用 Self 卡重定向（防御/能力卡选择队友/敌人）</summary>
+        public static bool SelfTargetEnabled { get; private set; } = true;
+
+        /// <summary>
+        /// Self 卡重定向白名单（类名）
+        /// 空列表 = 所有 Self 卡都允许重定向
+        /// </summary>
+        public static HashSet<string> SelfTargetWhitelist { get; private set; } = new();
+
         public static HashSet<string> DangerousCardsBlacklist { get; private set; } = new();
 
         /// <summary>
@@ -74,8 +89,18 @@ namespace MyStS2Mod.Utils
                 if (root.TryGetProperty("aoe_enabled", out var aoeEnabled))
                     AoeEnabled = aoeEnabled.GetBoolean();
 
+                if (root.TryGetProperty("curse_transfer_enabled", out var curseEnabled))
+                    CurseTransferEnabled = curseEnabled.GetBoolean();
+
+                if (root.TryGetProperty("curse_transfer_cost", out var curseCost))
+                    CurseTransferCost = curseCost.GetInt32();
+
+                if (root.TryGetProperty("self_target_enabled", out var selfEnabled))
+                    SelfTargetEnabled = selfEnabled.GetBoolean();
+
                 SingleTargetWhitelist = ParseStringArray(root, "single_target_whitelist");
                 AoeWhitelist = ParseStringArray(root, "aoe_whitelist");
+                SelfTargetWhitelist = ParseStringArray(root, "self_target_whitelist");
                 DangerousCardsBlacklist = ParseStringArray(root, "dangerous_cards_blacklist");
 
                 Console.WriteLine($"[{ModInfo.NAME}] 配置加载成功:");
@@ -84,6 +109,9 @@ namespace MyStS2Mod.Utils
                 Console.WriteLine($"  AOE启用: {AoeEnabled}");
                 Console.WriteLine($"  AOE白名单: {(AoeWhitelist.Count == 0 ? "全部允许" : string.Join(", ", AoeWhitelist))}");
                 Console.WriteLine($"  危险黑名单: {(DangerousCardsBlacklist.Count == 0 ? "无" : string.Join(", ", DangerousCardsBlacklist))}");
+                Console.WriteLine($"  诅咒转移: {CurseTransferEnabled} (费用: {CurseTransferCost})");
+                Console.WriteLine($"  Self重定向: {SelfTargetEnabled}");
+                Console.WriteLine($"  Self白名单: {(SelfTargetWhitelist.Count == 0 ? "全部允许" : string.Join(", ", SelfTargetWhitelist))}");
                 Console.WriteLine($"  已修复危险卡: {string.Join(", ", FixedDangerousCards)}");
             }
             catch (Exception ex)
@@ -114,6 +142,17 @@ namespace MyStS2Mod.Utils
             if (IsBlacklisted(cardClassName)) return false;
             if (AoeWhitelist.Count == 0) return true;
             return AoeWhitelist.Contains(cardClassName);
+        }
+
+        /// <summary>
+        /// 判断某张 Self 卡是否允许重定向目标
+        /// </summary>
+        public static bool IsSelfTargetAllowed(string cardClassName)
+        {
+            if (!SelfTargetEnabled) return false;
+            if (IsBlacklisted(cardClassName)) return false;
+            if (SelfTargetWhitelist.Count == 0) return true;
+            return SelfTargetWhitelist.Contains(cardClassName);
         }
 
         /// <summary>

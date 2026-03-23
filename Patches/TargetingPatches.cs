@@ -65,16 +65,32 @@ namespace MyStS2Mod.Patches
 
             if (creature == null) return;
 
+            if (creature.IsDead) return;
+
             var validTargetsType = GetValidTargetsType(__instance);
-            if (validTargetsType != TargetType.AnyEnemy) return;
-
-            if (!creature.IsPlayer || creature.IsDead) return;
-
             var cardName = FriendlyFireState.CurrentTargetingCardName;
-            if (cardName != null && !FriendlyFireConfig.IsSingleTargetAllowed(cardName))
-                return;
 
-            __result = true;
+            // --- AnyEnemy 类型：允许选中队友（攻击卡友伤）---
+            if (validTargetsType == TargetType.AnyEnemy)
+            {
+                if (!creature.IsPlayer) return;
+                if (cardName != null && !FriendlyFireConfig.IsSingleTargetAllowed(cardName))
+                    return;
+                __result = true;
+                return;
+            }
+
+            // --- AnyPlayer 类型：Self 卡重定向时也允许选中敌人 ---
+            // SelfTargetPatches 将 Self 卡的 TargetType 改为 AnyPlayer 进入目标选择。
+            // 原始的 AnyPlayer 只允许选玩家方，这里扩展为也允许选敌方。
+            if (validTargetsType == TargetType.AnyPlayer)
+            {
+                if (creature.IsPlayer) return; // 原始逻辑已允许，不用管
+                // 敌方 Creature — 检查 Self 卡白名单
+                if (cardName != null && !FriendlyFireConfig.IsSelfTargetAllowed(cardName))
+                    return;
+                __result = true;
+            }
         }
 
         private static System.Reflection.FieldInfo? _validTargetsTypeField;
@@ -150,6 +166,31 @@ namespace MyStS2Mod.Patches
 
                 var cardName = GetCardName(__instance);
                 if (!FriendlyFireConfig.IsSingleTargetAllowed(cardName)) return;
+
+                __result = true;
+                return;
+            }
+
+            // --- Self 卡重定向 → 允许任意活着的目标 ---
+            // Self 卡 + 非null目标 = 重定向模式（目标通过 TargetId 同步）
+            if (tt == TargetType.Self)
+            {
+                var cardName = GetCardName(__instance);
+                if (!FriendlyFireConfig.IsSelfTargetAllowed(cardName)) return;
+
+                __result = true;
+                return;
+            }
+
+            // --- 诅咒牌转移 → 允许诅咒牌指向队友 ---
+            // 诅咒牌原始 TargetType 为 None，如果出现在这里说明是转移模式
+            if (tt == TargetType.None && __instance.Type == CardType.Curse)
+            {
+                // 目标必须是己方活着的玩家，且不是自己
+                if (!target.IsPlayer) return;
+                if (target.Player == __instance.Owner) return;
+                if (__instance.Keywords.Contains(CardKeyword.Eternal)) return;
+                if (!FriendlyFireConfig.CurseTransferEnabled) return;
 
                 __result = true;
                 return;
