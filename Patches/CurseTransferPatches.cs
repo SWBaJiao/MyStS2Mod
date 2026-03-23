@@ -41,7 +41,7 @@ namespace MyStS2Mod.Patches
     // 注意：执行层不检查 Alt 键。诅咒牌能被打出的唯一入口
     //       是 UI 层的 TargetSelection patch 将其导入目标选择流程。
     // ================================================================
-    [HarmonyPatch(typeof(CardModel), nameof(CardModel.CanPlay))]
+    [HarmonyPatch]
     public static class CurseCanPlayPatch
     {
         // 匹配带 out 参数的重载: CanPlay(out UnplayableReason, out AbstractModel)
@@ -60,9 +60,6 @@ namespace MyStS2Mod.Patches
 
             // 配置检查
             if (!FriendlyFireConfig.CurseTransferEnabled) return;
-
-            // Eternal 诅咒不可转移（如钟之诅咒、登塔者之灾）
-            if (__instance.Keywords.Contains(CardKeyword.Eternal)) return;
 
             // 必须在战斗中
             var combatState = __instance.CombatState;
@@ -104,7 +101,7 @@ namespace MyStS2Mod.Patches
     {
         // 优先级高于已有的 TrackTargetSelectionPatch
         [HarmonyPriority(Priority.High)]
-        static bool Prefix(NMouseCardPlay __instance, ref Task __result)
+        static bool Prefix(NMouseCardPlay __instance, TargetMode targetMode, ref Task __result)
         {
             // UI 层：必须按住触发键
             if (!FriendlyFireState.IsToggleKeyHeld) return true;
@@ -118,29 +115,32 @@ namespace MyStS2Mod.Patches
             // 只处理诅咒牌
             if (card.Type != CardType.Curse) return true;
 
-            // Eternal 诅咒不可转移
-            if (card.Keywords.Contains(CardKeyword.Eternal)) return true;
-
             // 追踪卡牌名（供 AllowedToTargetNode 使用）
             FriendlyFireState.CurrentTargetingCardName =
                 IsValidTargetPatch.GetCardName(card);
 
             // 强制进入 AnyAlly 单体目标选择
-            var singleTargeting = AccessTools.Method(
+            _singleCreatureTargeting ??= AccessTools.Method(
                 typeof(NMouseCardPlay), "SingleCreatureTargeting");
 
-            if (singleTargeting == null)
+            if (_singleCreatureTargeting == null)
             {
                 Plugin.Logger.Info("CurseTransfer: SingleCreatureTargeting 方法未找到");
                 return true;
             }
 
-            __result = (Task)singleTargeting.Invoke(
+            // ★ 关键：必须传递原始 targetMode，不能用 default(TargetMode)！
+            // default(TargetMode) = None → NTargetManager.IsInSelection = false
+            // → OnNodeHovered 和 _Input 都会直接 return → 无法悬停/点击
+            __result = (Task)_singleCreatureTargeting.Invoke(
                 __instance,
-                new object[] { default(TargetMode), TargetType.AnyAlly })!;
+                new object[] { targetMode, TargetType.AnyAlly })!;
 
+            Plugin.Logger.Info($"诅咒牌 {IsValidTargetPatch.GetCardName(card)} 进入目标选择模式");
             return false; // 跳过原始 TargetSelection
         }
+
+        private static System.Reflection.MethodInfo? _singleCreatureTargeting;
 
         private static System.Reflection.PropertyInfo? _cardProp;
 
@@ -181,7 +181,6 @@ namespace MyStS2Mod.Patches
 
             // 配置检查
             if (!FriendlyFireConfig.CurseTransferEnabled) return true;
-            if (__instance.Keywords.Contains(CardKeyword.Eternal)) return true;
 
             // 拦截原方法，执行转移
             __result = ExecuteCurseTransfer(__instance, choiceContext, target);

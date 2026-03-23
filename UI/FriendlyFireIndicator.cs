@@ -1,5 +1,6 @@
 using Godot;
 using MyStS2Mod.Utils;
+using static MyStS2Mod.Utils.I18n;
 
 namespace MyStS2Mod.UI
 {
@@ -45,7 +46,7 @@ namespace MyStS2Mod.UI
             // 文字标签
             _label = new Label();
             _label.Name = "FriendlyFireLabel";
-            _label.Text = $"友军伤害开启 [{FriendlyFireConfig.ToggleKey}]";
+            _label.Text = $"{I18n.T("friendly_fire_active")} [{FriendlyFireConfig.ToggleKey}]";
             _label.HorizontalAlignment = HorizontalAlignment.Center;
             _label.VerticalAlignment = VerticalAlignment.Center;
 

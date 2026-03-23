@@ -189,7 +189,6 @@ namespace MyStS2Mod.Patches
                 // 目标必须是己方活着的玩家，且不是自己
                 if (!target.IsPlayer) return;
                 if (target.Player == __instance.Owner) return;
-                if (__instance.Keywords.Contains(CardKeyword.Eternal)) return;
                 if (!FriendlyFireConfig.CurseTransferEnabled) return;
 
                 __result = true;

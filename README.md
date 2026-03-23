@@ -1,5 +1,7 @@
 # FriendlyFire-StS2 — 杀戮尖塔 2 友伤模组
 
+**🌐 Language / 语言：** [English](README_EN.md) | [日本語](README_JA.md) | [한국어](README_KO.md) | 中文
+
 > 按住 `Alt` 键，让你的攻击牌也能对队友「友好地」挥出一刀。
 
 Slay the Spire 2
